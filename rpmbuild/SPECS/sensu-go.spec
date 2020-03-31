@@ -96,11 +96,11 @@ rm -rf /var/lib/sensu
 
 
 %files backend
-%attr(-,sensu,sensu) /var/lib/sensu/
-%attr(755, sensu, sensu) /etc/sensu/
-%attr(755, sensu, sensu) /var/cache/sensu/
-%attr(755, sensu, sensu) /var/log/sensu/
-%attr(755, sensu, sensu) /var/run/sensu/
+%attr(-,sensu,sensu) %dir /var/lib/sensu/
+%attr(755, sensu, sensu) %dir /etc/sensu/
+%attr(755, sensu, sensu) %dir /var/cache/sensu/
+%attr(755, sensu, sensu) %dir /var/log/sensu/
+%attr(755, sensu, sensu) %dir /var/run/sensu/
 %attr(644, sensu, sensu) /etc/sensu/backend.yml
 %attr(644, root, root) /etc/systemd/system/sensu-backend.service
 %attr(755, root, root) /usr/sbin/sensu-backend
@@ -108,11 +108,11 @@ rm -rf /var/lib/sensu
 %exclude /etc/sensu/agent.yml
 
 %files agent
-%attr(-,sensu,sensu) /var/lib/sensu/
-%attr(755, sensu, sensu) /etc/sensu/
-%attr(755, sensu, sensu) /var/cache/sensu/
-%attr(755, sensu, sensu) /var/log/sensu/
-%attr(755, sensu, sensu) /var/run/sensu/
+%attr(-,sensu,sensu) %dir /var/lib/sensu/
+%attr(755, sensu, sensu) %dir /etc/sensu/
+%attr(755, sensu, sensu) %dir /var/cache/sensu/
+%attr(755, sensu, sensu) %dir /var/log/sensu/
+%attr(755, sensu, sensu) %dir /var/run/sensu/
 %attr(644, sensu, sensu) /etc/sensu/agent.yml
 %attr(644, root, root) /etc/systemd/system/sensu-agent.service
 %attr(755, root, root) /usr/sbin/sensu-agent
