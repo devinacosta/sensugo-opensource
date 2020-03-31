@@ -28,7 +28,7 @@ Summary: Sunsu Go Agent Service
 Sensu Go Agent Package
 
 BuildRequires:      systemd
-BuildRequires:	    golang >= 1.12
+BuildRequires:	    golang >= 1.13
 
 Requires(pre):      shadow-utils
 Requires(post):     systemd
