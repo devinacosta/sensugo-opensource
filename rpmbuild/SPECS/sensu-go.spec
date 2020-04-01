@@ -3,7 +3,7 @@
 
 Name:           sensu-go
 Version:        5.19.0
-Release:        1%{?dist}
+Release:        0%{?dist}
 Summary:        A monitoring framework
 License:        MIT
 URL:            https://github.com/sensu/sensu-go
@@ -107,7 +107,7 @@ exit 0
 %attr(755, sensu, sensu) %dir /var/cache/sensu/
 %attr(755, sensu, sensu) %dir /var/log/sensu/
 %ghost %attr(755, sensu, sensu) /run/sensu/
-%attr(644, sensu, sensu) /etc/sensu/backend.yml
+%config(noreplace) %attr(644, sensu, sensu) /etc/sensu/backend.yml
 %attr(644, root, root) /usr/lib/systemd/system/sensu-backend.service
 %attr(755, root, root) /usr/sbin/sensu-backend
 %attr(755, root, root) /usr/sbin/sensuctl
@@ -120,7 +120,7 @@ exit 0
 %attr(755, sensu, sensu) %dir /var/cache/sensu/
 %attr(755, sensu, sensu) %dir /var/log/sensu/
 %ghost %attr(755, sensu, sensu) /run/sensu/
-%attr(644, sensu, sensu) /etc/sensu/agent.yml
+%config(noreplace) %attr(644, sensu, sensu) /etc/sensu/agent.yml
 %attr(644, root, root) /usr/lib/systemd/system/sensu-agent.service
 %attr(755, root, root) /usr/sbin/sensu-agent
 %{_tmpfilesdir}/%{name}.conf
@@ -128,6 +128,8 @@ exit 0
 
 
 %changelog
+* Wed Apr 01 2020 Devin Acosta <devin@linuxstack.cloud> - 1.00.0-3
+- Fixed Configs being overwritten
 * Mon Mar 30 2020 Devin Acosta <devin@linuxstack.cloud> - 1.00.0-3
 - Fixed agent config in backend, and vice versus.
 * Sun Mar 29 2020 Devin Acosta <devin@linuxstack.cloud> - 1.00.0-2
