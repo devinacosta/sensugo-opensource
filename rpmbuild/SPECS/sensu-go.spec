@@ -13,6 +13,7 @@ Source2:        sensu-agent.service
 Source3:        backend.yml
 Source4:	sensu-build.sh
 Source5:	agent.yml
+Source6:	%{name}-tmpfiles.conf
 
 BuildRequires:  systemd
 BuildRequires:  golang >= 1.13-0
@@ -27,12 +28,16 @@ Sensu is an open source monitoring tool for ephemeral infrastructure and distrib
 %package backend
 Summary: Sensu Go Backend Service
 %description backend
-Sensu Go Backend Package
+The Sensu backend is a service that manages check requests and event data. Every Sensu backend includes an integrated transport
+for scheduling checks using subscriptions, an event processing pipeline that applies filters, mutators, and handlers, 
+an embedded etcd datastore for storing configuration and state, a Sensu API, a Sensu dashboard, and the sensu-backend command line tool.
 
 %package agent
 Summary: Sunsu Go Agent Service
 %description agent
-Sensu Go Agent Package
+The Sensu agent is a lightweight client that runs on the infrastructure components you want to monitor. 
+Agents register with the Sensu backend as monitoring entities with type: "agent". Agent entities are
+responsible for creating check and metrics events to send to the backend event pipeline.
 
 
 %prep
@@ -45,13 +50,14 @@ cp %{SOURCE4} sensu-build.sh
 cp bin/* %{buildroot}/usr/sbin
 
 %install 
+mkdir -p %{buildroot}%{_tmpfilesdir}
 mkdir -p %{buildroot}/usr/lib/systemd/system
 mkdir -p %{buildroot}/etc/sensu
 mkdir -p %{buildroot}/usr/sbin
 mkdir -p %{buildroot}/var/lib/sensu
 mkdir -p %{buildroot}/var/cache/sensu
 mkdir -p %{buildroot}/var/log/sensu
-mkdir -p %{buildroot}/var/run/sensu
+mkdir -p %{buildroot}/run/sensu
 install -m 755 bin/sensu-agent %{buildroot}/usr/sbin/sensu-agent
 install -m 755 bin/sensu-backend %{buildroot}/usr/sbin/sensu-backend
 install -m 755 bin/sensuctl %{buildroot}/usr/sbin/sensuctl
@@ -59,6 +65,7 @@ install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/systemd/system/sensu-backend.ser
 install -m 0640 %{SOURCE3} %{buildroot}/etc/sensu/backend.yml
 install -m 0644 %{SOURCE2} %{buildroot}/usr/lib/systemd/system/sensu-agent.service
 install -m 0640 %{SOURCE5} %{buildroot}/etc/sensu/agent.yml
+install -m 0644 %{SOURCE6} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 
 %check
 
@@ -99,11 +106,12 @@ exit 0
 %attr(755, sensu, sensu) %dir /etc/sensu/
 %attr(755, sensu, sensu) %dir /var/cache/sensu/
 %attr(755, sensu, sensu) %dir /var/log/sensu/
-%attr(755, sensu, sensu) %dir /var/run/sensu/
+%ghost %attr(755, sensu, sensu) /run/sensu/
 %attr(644, sensu, sensu) /etc/sensu/backend.yml
 %attr(644, root, root) /usr/lib/systemd/system/sensu-backend.service
 %attr(755, root, root) /usr/sbin/sensu-backend
 %attr(755, root, root) /usr/sbin/sensuctl
+%{_tmpfilesdir}/%{name}.conf
 %exclude /etc/sensu/agent.yml
 
 %files agent
@@ -111,10 +119,11 @@ exit 0
 %attr(755, sensu, sensu) %dir /etc/sensu/
 %attr(755, sensu, sensu) %dir /var/cache/sensu/
 %attr(755, sensu, sensu) %dir /var/log/sensu/
-%attr(755, sensu, sensu) %dir /var/run/sensu/
+%ghost %attr(755, sensu, sensu) /run/sensu/
 %attr(644, sensu, sensu) /etc/sensu/agent.yml
 %attr(644, root, root) /usr/lib/systemd/system/sensu-agent.service
 %attr(755, root, root) /usr/sbin/sensu-agent
+%{_tmpfilesdir}/%{name}.conf
 %exclude /etc/sensu/backend.yml
 
 
