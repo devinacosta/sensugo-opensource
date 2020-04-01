@@ -3,7 +3,7 @@
 
 Name:           sensu-go
 Version:        5.19.0
-Release:        5%{?dist}
+Release:        1%{?dist}
 Summary:        A monitoring framework
 License:        MIT
 URL:            https://github.com/sensu/sensu-go
@@ -11,9 +11,9 @@ Source0:        https://github.com/sensu/sensu-go/archive/v%{version}.zip
 Source1:        sensu-backend.service
 Source2:        sensu-agent.service
 Source3:        backend.yml
-Source4:	sensu-build.sh
-Source5:	agent.yml
-Source6:	%{name}-tmpfiles.conf
+Source4:	    sensu-build.sh
+Source5:	    agent.yml
+Source6:	    %{name}-tmpfiles.conf
 
 BuildRequires:  systemd
 BuildRequires:  golang >= 1.13-0
@@ -23,21 +23,30 @@ Requires(pre):  shadow-utils
 ExclusiveArch:  x86_64
 
 %description
-Sensu is an open source monitoring tool for ephemeral infrastructure and distributed applications. It is an agent based monitoring system with built-in auto-discovery, making it very well-suited for cloud environments. Sensu uses service checks to monitor service health and collect telemetry data. It also has a number of well defined APIs for configuration, external data input, and to provide access to Sensu's data. Sensu is extremely extensible and is commonly referred to as "the monitoring router".
+Sensu is an open source monitoring tool for ephemeral infrastructure and distributed
+applications. It is an agent based monitoring system with built-in auto-discovery, 
+making it very well-suited for cloud environments. Sensu uses service checks to 
+monitor service health and collect telemetry data. It also has a number of well 
+defined APIs for configuration, external data input, and to provide access to 
+Sensu's data. Sensu is extremely extensible and is commonly referred to as 
+"the monitoring router".
 
 %package backend
 Summary: Sensu Go Backend Service
 %description backend
-The Sensu backend is a service that manages check requests and event data. Every Sensu backend includes an integrated transport
-for scheduling checks using subscriptions, an event processing pipeline that applies filters, mutators, and handlers, 
-an embedded etcd datastore for storing configuration and state, a Sensu API, a Sensu dashboard, and the sensu-backend command line tool.
+The Sensu backend is a service that manages check requests and event data. 
+Every Sensu backend includes an integrated transport for scheduling checks 
+using subscriptions, an event processing pipeline that applies filters, 
+mutators, and handlers, an embedded etcd datastore for storing configuration
+and state, a Sensu API, a Sensu dashboard, and the sensu-backend command line tool.
 
 %package agent
 Summary: Sunsu Go Agent Service
 %description agent
-The Sensu agent is a lightweight client that runs on the infrastructure components you want to monitor. 
-Agents register with the Sensu backend as monitoring entities with type: "agent". Agent entities are
-responsible for creating check and metrics events to send to the backend event pipeline.
+The Sensu agent is a lightweight client that runs on the infrastructure 
+components you want to monitor.  Agents register with the Sensu backend as
+monitoring entities with type: "agent". Agent entities are responsible for 
+creating check and metrics events to send to the backend event pipeline.
 
 
 %prep
