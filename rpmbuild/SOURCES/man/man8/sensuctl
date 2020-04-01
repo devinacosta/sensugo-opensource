@@ -1,0 +1,87 @@
+.\" Manpage for sensuctl.
+.\" Contact devin@linuxstack.cloud to correct any errors or typos.
+.TH man 8 "31 March 2020" "1.0" "systemctl man page"
+.SH NAME
+sensuctl \- Sensuctl is a command line tool for managing resources within Sensu. 
+.SH SYNOPSIS
+Commands:
+  completion           Output shell completion code for the specified shell (bash or zsh)
+  configure            Initialize sensuctl configuration
+  create               create or replace resources from file or URL (path, file://, http[s]://), or STDIN otherwise.
+  delete               delete resources from file or STDIN
+  dump
+  edit                 Edit resources interactively
+  env                  display the commands to set up the environment used by sensuctl
+  logout               Logout from sensuctl
+  version              Show the sensuctl version information
+
+Management Commands:
+  api-key              Manage apikeys
+  asset                Manage assets
+  check                Manage checks
+  cluster              Manage sensu cluster
+  cluster-role         Manage cluster roles
+  cluster-role-binding Manage cluster role bindings
+  command              Manage sensuctl commands
+  config               Modify sensuctl configuration
+  entity               Manage entities
+  event                Manage events
+  filter               Manage filters
+  handler              Manage handlers
+  hook                 Manage hooks
+  mutator              Manage mutators
+  namespace            Manage namespaces
+  role                 Manage roles
+  role-binding         Manage role bindings
+  silenced             Manage silenced subscriptions and checks
+  tessen               Manage tessen configuration
+  user                 Manage users
+.SH FIRST TIME SETUP
+To set up sensuctl, run sensuctl configure to log in to sensuctl and connect to the Sensu backend:
+
+.B sensuctl configure
+
+When prompted, type the Sensu backend URL and your Sensu access credentials.
+
+ Sensu Backend URL: http://127.0.0.1:8080 
+ Username: YOUR_USERNAME 
+ Password: YOUR_PASSWORD
+ Namespace: default 
+ Preferred output format: tabular 
+.SH SENSU BACKEND URL
+The Sensu backend URL is the HTTP or HTTPS URL where sensuctl can connect to the Sensu backend server. The default URL is http://127.0.0.1:8080.
+
+To connect to a Sensu cluster, connect sensuctl to any single backend in the cluster. For information about configuring the Sensu backend URL, see the backend reference.
+.SH USERNAME,PASSWORD,NAMESPACE
+During the Sensu backend installation process, you create an administrator username and password and a default namespace.
+
+Your ability to get, list, create, update, and delete resources with sensuctl depends on the permissions assigned to your Sensu user. For more information about configuring Sensu access control, see the RBAC reference.
+
+NOTE: For a new installation, you can set administrator credentials with environment variables during initialization. If you are using Docker and you do not include the environment variables to set administrator credentials, the backend will initialize with the default username (admin) and password (P@ssw0rd!).
+
+.B Change admin user’s password
+
+After you have installed and configured sensuctl, you can change the admin user’s password. Run:
+
+.B sensuctl user change-password --interactive
+
+.SH GETTING HELP
+See command and global flags
+
+.B sensuctl --help
+
+See subcommands and flags
+
+.B sensuctl check --help
+
+See usage and flags
+
+.B sensuctl check delete --help
+
+.SH DESCRIPTION
+Sensuctl is a command line tool for managing resources within Sensu. It works by calling Sensu’s underlying API to create, read, update, and delete resources, events, and entities. Sensuctl is available for Linux, macOS, and Windows
+.SH WEBSITE HELP
+Website URL for more info is: 
+.B https://docs.sensu.io/sensu-go/latest/sensuctl/reference/
+.SH AUTHOR
+Sensu Website / Devin Acosta (devin@linuxstack.cloud)

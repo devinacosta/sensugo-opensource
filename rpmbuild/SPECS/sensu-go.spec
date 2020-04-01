@@ -5,7 +5,6 @@ Name:           sensu-go
 Version:        5.19.0
 Release:        1%{?dist}
 Summary:        A monitoring framework
-Group:          Development/Languages
 License:        MIT
 URL:            https://github.com/sensu/sensu-go
 Source0:        https://github.com/sensu/sensu-go/archive/v%{version}.zip 
@@ -14,8 +13,16 @@ Source2:        sensu-agent.service
 Source3:        backend.yml
 Source4:	sensu-build.sh
 Source5:	agent.yml
+
+BuildRequires:  systemd
+BuildRequires:  golang >= 1.13-0
+
+Requires(pre):  shadow-utils
+
+ExclusiveArch:  x86_64
+
 %description
-Sensu Go Open Source
+Sensu is an open source monitoring tool for ephemeral infrastructure and distributed applications. It is an agent based monitoring system with built-in auto-discovery, making it very well-suited for cloud environments. Sensu uses service checks to monitor service health and collect telemetry data. It also has a number of well defined APIs for configuration, external data input, and to provide access to Sensu's data. Sensu is extremely extensible and is commonly referred to as "the monitoring router".
 
 %package backend
 Summary: Sensu Go Backend Service
@@ -27,15 +34,6 @@ Summary: Sunsu Go Agent Service
 %description agent
 Sensu Go Agent Package
 
-BuildRequires:      systemd
-BuildRequires:	    golang >= 1.13
-
-Requires(pre):      shadow-utils
-Requires(post):     systemd
-Requires(preun):    systemd
-Requires(postun):   systemd
-
-ExclusiveArch: x86_64
 
 %prep
 %setup -q
@@ -47,7 +45,7 @@ cp %{SOURCE4} sensu-build.sh
 cp bin/* %{buildroot}/usr/sbin
 
 %install 
-mkdir -p %{buildroot}/etc/systemd/system
+mkdir -p %{buildroot}/usr/lib/systemd/system
 mkdir -p %{buildroot}/etc/sensu
 mkdir -p %{buildroot}/usr/sbin
 mkdir -p %{buildroot}/var/lib/sensu
@@ -57,20 +55,26 @@ mkdir -p %{buildroot}/var/run/sensu
 install -m 755 bin/sensu-agent %{buildroot}/usr/sbin/sensu-agent
 install -m 755 bin/sensu-backend %{buildroot}/usr/sbin/sensu-backend
 install -m 755 bin/sensuctl %{buildroot}/usr/sbin/sensuctl
-install -m 0644 %{SOURCE1} %{buildroot}/etc/systemd/system/sensu-backend.service
+install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/systemd/system/sensu-backend.service
 install -m 0640 %{SOURCE3} %{buildroot}/etc/sensu/backend.yml
-install -m 0644 %{SOURCE2} %{buildroot}/etc/systemd/system/sensu-agent.service
+install -m 0644 %{SOURCE2} %{buildroot}/usr/lib/systemd/system/sensu-agent.service
 install -m 0640 %{SOURCE5} %{buildroot}/etc/sensu/agent.yml
 
 %check
 
 %pre backend
-/usr/bin/getent group sensu || /usr/sbin/groupadd -r sensu
-/usr/bin/getent passwd sensu || /usr/sbin/useradd -r -s /sbin/nologin -g sensu sensu
+getent group GROUPNAME >/dev/null || groupadd -r sensu
+getent passwd USERNAME >/dev/null || \
+    useradd -r -g sensu -d /opt/sensu -s /sbin/nologin \
+    -c "Sensu User" sensu
+exit 0
 
 %pre agent
-/usr/bin/getent group sensu || /usr/sbin/groupadd -r sensu
-/usr/bin/getent passwd sensu || /usr/sbin/useradd -r -s /sbin/nologin -g sensu sensu
+getent group GROUPNAME >/dev/null || groupadd -r sensu
+getent passwd USERNAME >/dev/null || \
+    useradd -r -g sensu -d /opt/sensu -s /sbin/nologin \
+    -c "Sensu User" sensu
+exit 0
 
 %post backend
 %systemd_post sensu-backend.service 
@@ -85,15 +89,10 @@ install -m 0640 %{SOURCE5} %{buildroot}/etc/sensu/agent.yml
 %systemd_preun sensu-agent.service
 
 %postun backend
-/usr/sbin/userdel sensu
-rm -rf /var/cache/sensu
-rm -rf /var/lib/sensu
+%systemd_postun sensu-backend.service
 
 %postun agent
-/usr/sbin/userdel sensu
-rm -rf /var/cache/sensu
-rm -rf /var/lib/sensu
-
+%systemd_postun sensu-agent.service
 
 %files backend
 %attr(-,sensu,sensu) %dir /var/lib/sensu/
@@ -102,7 +101,7 @@ rm -rf /var/lib/sensu
 %attr(755, sensu, sensu) %dir /var/log/sensu/
 %attr(755, sensu, sensu) %dir /var/run/sensu/
 %attr(644, sensu, sensu) /etc/sensu/backend.yml
-%attr(644, root, root) /etc/systemd/system/sensu-backend.service
+%attr(644, root, root) /usr/lib/systemd/system/sensu-backend.service
 %attr(755, root, root) /usr/sbin/sensu-backend
 %attr(755, root, root) /usr/sbin/sensuctl
 %exclude /etc/sensu/agent.yml
@@ -114,7 +113,7 @@ rm -rf /var/lib/sensu
 %attr(755, sensu, sensu) %dir /var/log/sensu/
 %attr(755, sensu, sensu) %dir /var/run/sensu/
 %attr(644, sensu, sensu) /etc/sensu/agent.yml
-%attr(644, root, root) /etc/systemd/system/sensu-agent.service
+%attr(644, root, root) /usr/lib/systemd/system/sensu-agent.service
 %attr(755, root, root) /usr/sbin/sensu-agent
 %exclude /etc/sensu/backend.yml
 
