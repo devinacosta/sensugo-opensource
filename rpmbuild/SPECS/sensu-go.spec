@@ -3,7 +3,7 @@
 
 Name:           sensu-go
 Version:        5.19.0
-Release:        0%{?dist}
+Release:        5%{?dist}
 Summary:        A monitoring framework
 License:        MIT
 URL:            https://github.com/sensu/sensu-go
@@ -70,15 +70,15 @@ install -m 0644 %{SOURCE6} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 %check
 
 %pre backend
-getent group GROUPNAME >/dev/null || groupadd -r sensu
-getent passwd USERNAME >/dev/null || \
+getent group sensu >/dev/null || groupadd -r sensu
+getent passwd sensu >/dev/null || \
     useradd -r -g sensu -d /opt/sensu -s /sbin/nologin \
     -c "Sensu User" sensu
 exit 0
 
 %pre agent
-getent group GROUPNAME >/dev/null || groupadd -r sensu
-getent passwd USERNAME >/dev/null || \
+getent group sensu >/dev/null || groupadd -r sensu
+getent passwd sensu >/dev/null || \
     useradd -r -g sensu -d /opt/sensu -s /sbin/nologin \
     -c "Sensu User" sensu
 exit 0
