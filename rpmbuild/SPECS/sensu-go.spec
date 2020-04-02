@@ -48,6 +48,11 @@ components you want to monitor.  Agents register with the Sensu backend as
 monitoring entities with type: "agent". Agent entities are responsible for 
 creating check and metrics events to send to the backend event pipeline.
 
+%package cli
+Summary: Sensu Go CLI 
+%description cli
+The Sensu GO (sensuctl) command line utility to interact with Sensu Go Backend.
+
 
 %prep
 %setup -q
@@ -119,7 +124,6 @@ exit 0
 %config(noreplace) %attr(644, sensu, sensu) /etc/sensu/backend.yml
 %attr(644, root, root) /usr/lib/systemd/system/sensu-backend.service
 %attr(755, root, root) /usr/sbin/sensu-backend
-%attr(755, root, root) /usr/sbin/sensuctl
 %{_tmpfilesdir}/%{name}.conf
 %exclude /etc/sensu/agent.yml
 
@@ -135,9 +139,13 @@ exit 0
 %{_tmpfilesdir}/%{name}.conf
 %exclude /etc/sensu/backend.yml
 
+%files cli
+%attr(755, root, root) /usr/sbin/sensuctl
+
+
 
 %changelog
-* Wed Apr 01 2020 Devin Acosta <devin@linuxstack.cloud> - 1.00.0-3
+* Wed Apr 01 2020 Devin Acosta <devin@linuxstack.cloud> - 1.00.0-4
 - Fixed Configs being overwritten, added +oss_el7|8 to version
 * Mon Mar 30 2020 Devin Acosta <devin@linuxstack.cloud> - 1.00.0-3
 - Fixed agent config in backend, and vice versus.
