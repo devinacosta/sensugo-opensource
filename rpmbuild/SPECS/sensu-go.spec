@@ -138,7 +138,7 @@ exit 0
 
 %changelog
 * Wed Apr 01 2020 Devin Acosta <devin@linuxstack.cloud> - 1.00.0-3
-- Fixed Configs being overwritten
+- Fixed Configs being overwritten, added +oss_el7|8 to version
 * Mon Mar 30 2020 Devin Acosta <devin@linuxstack.cloud> - 1.00.0-3
 - Fixed agent config in backend, and vice versus.
 * Sun Mar 29 2020 Devin Acosta <devin@linuxstack.cloud> - 1.00.0-2
