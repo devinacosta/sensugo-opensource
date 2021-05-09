@@ -2,7 +2,7 @@
 %undefine _disable_source_fetch
 
 Name:           sensu-go
-Version:        5.21.1
+Version:        5.21.5
 Release:        1%{?dist}
 Summary:        A monitoring framework
 License:        MIT
@@ -145,6 +145,8 @@ exit 0
 
 
 %changelog
+* Sun May 09 2021 Devin Acosta <devin@linuxstack.cloud> - 1.00.0-10
+- Upgraded to Sensu 5.21.5
 * Tue Sep 22 2020 Devin Acosta <devin@linuxstack.cloud> - 1.00.0-9
 - Upgraded to Sensu 5.21.1
 * Wed May 27 2020 Devin Acosta <devin@linuxstack.cloud> - 1.00.0-8
