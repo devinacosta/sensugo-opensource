@@ -1,0 +1,36 @@
+
+In order to Install Sensu Opensource, you just need to install the 3 RPMs' provided in the
+
+rpmbuild/RPMS/x86_64 directory:
+
+sensu-go-agent		(Agent to run checks on host)
+sensu-go-backend	(Sensu Go Backend Server)
+sensu-go-cli		(Command Line Interface to configure Sensu)
+
+You can read the official Install docs here:
+https://docs.sensu.io/sensu-go/6.1/operations/deploy-sensu/install-sensu/
+
+After the 3 packages have been installed onto host, You will need to do the following:
+
+#1) Start sensu-backend
+systemctl start sensu-backend
+
+#2) Initialize Backend with Initial Username/password
+export SENSU_BACKEND_CLUSTER_ADMIN_USERNAME=admin
+export SENSU_BACKEND_CLUSTER_ADMIN_PASSWORD=somepassword
+sensu-backend init
+
+#3) Configure the Sensu CLI to talk to Backend, this assumes you running CLI on the same host as the backend, you can obviously use a dedicated/jumphost to talk to the backend.
+sensuctl configure -n \
+--username 'YOUR_USERNAME' \
+--password 'YOUR_PASSWORD' \
+--namespace default \
+--url 'http://127.0.0.1:8080'
+
+#4) Test Sensu is working, it will return just a line of headers with no data (this is expected as it is new install)
+sensuctl event list
+sensuctl entity list
+
+Now you are ready to start deploying checks, handlers, filters, etc.
+
+
